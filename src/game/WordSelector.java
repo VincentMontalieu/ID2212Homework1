@@ -38,18 +38,20 @@ public class WordSelector {
 
     @SuppressWarnings("resource")
     public static String getWord() {
+	String line = null;
 	BufferedReader in = null;
 	try {
 	    in = new BufferedReader(new FileReader(new File("words.txt")));
 	} catch (FileNotFoundException e) {
+	    line = "random";
 	    e.printStackTrace();
 	}
-	String line = null;
 	int max = random();
 	for (int i = 0; i <= max; i++) {
 	    try {
 		line = in.readLine();
 	    } catch (IOException e) {
+		line = "random";
 		e.printStackTrace();
 	    }
 	}
