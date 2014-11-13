@@ -27,6 +27,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 
@@ -57,8 +58,8 @@ public class Hangman {
     boolean leftLegDrawn = false;
     boolean rightLegDrawn = false;
 
-    String winnerMessage = "Congratulations!  You won!";
-    String losingPrefix = "You lost!  The answer was ";
+    String winnerMessage = "Congratulations! You won!";
+    String losingPrefix = "You lost! The answer was ";
     String currentGuess;
     String targetWord;
 
@@ -71,8 +72,7 @@ public class Hangman {
      */
     public void setUpNewGame() {
 	numberWrong = 0;
-	messageArea.setText("Win!");
-
+	messageArea.setText("");
 	// Enable alphabet buttons
 	Iterator<JButton> alphaIterator = alphaButtonList.iterator();
 	while (alphaIterator.hasNext()) {
@@ -521,7 +521,7 @@ public class Hangman {
 	pane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 	pane.add(Box.createHorizontalGlue());
 
-	messageArea = new JLabel("Win or Die!");
+	messageArea = new JLabel("Are you ready?");
 	messageArea.setFont(new Font("Helvetica", Font.PLAIN, 28));
 	messageArea.setBackground(Color.lightGray);
 	messageArea.setForeground(Color.red);
