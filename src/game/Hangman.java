@@ -57,16 +57,6 @@ public class Hangman {
     boolean leftLegDrawn = false;
     boolean rightLegDrawn = false;
 
-    // Target words
-    String[] targetWords = { "native", "country", "color", "example", "helper",
-	    "favorite", "charcoal", "smoke", "interest", "video", "language",
-	    "drink", "homework", "shell", "sympathy", "define", "specify",
-	    "drawing", "picture", "frame", "nutshell", "polygon", "circle",
-	    "rectangle", "sphere", "sherry", "lotion", "shoes", "trowsers",
-	    "belt", "blouse", "nightgown", "cowboy", "engineer", "waiter",
-	    "wheel", "engine", "pedal", "street", "navigate", "sailing",
-	    "skiing", "outboard", "runner", "dancer", "hero", "helpless",
-	    "pseudonym", "lioness", "integrity" };
     String winnerMessage = "Congratulations!  You won!";
     String losingPrefix = "You lost!  The answer was ";
     String currentGuess;
@@ -81,7 +71,7 @@ public class Hangman {
      */
     public void setUpNewGame() {
 	numberWrong = 0;
-	messageArea.setText("Win or Die!");
+	messageArea.setText("Win!");
 
 	// Enable alphabet buttons
 	Iterator<JButton> alphaIterator = alphaButtonList.iterator();
@@ -96,11 +86,9 @@ public class Hangman {
 	wordArea.setBackground(Color.lightGray);
 
 	// Present the new word
-	double numb = Math.random();
-	next = (int) (numb * targetWords.length);
-	targetWord = targetWords[next];
+	targetWord = WordSelector.getWord();
 
-	// Fill the word-to-guess with ???
+	// Fill the word-to-guess with ---
 	currentGuess = "-";
 	for (int i = 0; i < targetWord.length() - 1; i++) {
 	    currentGuess = currentGuess.concat("-");
