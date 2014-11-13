@@ -1,5 +1,10 @@
 package game;
 
+/**
+ * Hangman.java
+ * @version 1.0, May 16, 2001
+ */
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -26,11 +31,6 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 
 /**
- * Hangman.java
- * @version 1.0, May 16, 2001
- */
-
-/**
  * The Hangman class implements a game of Hangman.
  * 
  * @author Carl Reynolds
@@ -43,8 +43,8 @@ public class Hangman {
 
     JLabel wordArea = null;
     JLabel messageArea = null;
-    java.util.List alphaButtonList = new ArrayList();
-    Iterator alphaIterator = null;
+    java.util.List<JButton> alphaButtonList = new ArrayList<JButton>();
+    Iterator<JButton> alphaIterator = null;
 
     boolean reset = true;
     boolean disable = false;
@@ -67,8 +67,8 @@ public class Hangman {
 	    "wheel", "engine", "pedal", "street", "navigate", "sailing",
 	    "skiing", "outboard", "runner", "dancer", "hero", "helpless",
 	    "pseudonym", "lioness", "integrity" };
-    String winnerMessage = "Congratulations!  You are a saved!";
-    String losingPrefix = "Wrong!  You die!  The answer was ";
+    String winnerMessage = "Congratulations!  You won!";
+    String losingPrefix = "You lost!  The answer was ";
     String currentGuess;
     String targetWord;
 
@@ -84,7 +84,7 @@ public class Hangman {
 	messageArea.setText("Win or Die!");
 
 	// Enable alphabet buttons
-	Iterator alphaIterator = alphaButtonList.iterator();
+	Iterator<JButton> alphaIterator = alphaButtonList.iterator();
 	while (alphaIterator.hasNext()) {
 	    ((JButton) alphaIterator.next()).setEnabled(reset);
 	}
@@ -101,9 +101,9 @@ public class Hangman {
 	targetWord = targetWords[next];
 
 	// Fill the word-to-guess with ???
-	currentGuess = "?";
+	currentGuess = "-";
 	for (int i = 0; i < targetWord.length() - 1; i++) {
-	    currentGuess = currentGuess.concat("?");
+	    currentGuess = currentGuess.concat("-");
 	}
 	wordArea.setText(currentGuess);
 
@@ -150,7 +150,7 @@ public class Hangman {
 	// We have a winner?
 	if (currentGuess.equals(targetWord)) {
 	    // Disable the buttons
-	    Iterator alphaIterator = alphaButtonList.iterator();
+	    Iterator<JButton> alphaIterator = alphaButtonList.iterator();
 	    while (alphaIterator.hasNext()) {
 		((JButton) alphaIterator.next()).setEnabled(disable);
 	    }
@@ -197,7 +197,7 @@ public class Hangman {
 	    // Is the game over?
 	    if (numberWrong >= numberOfBodyParts) {
 		// Disable the buttons
-		Iterator alphaIterator = alphaButtonList.iterator();
+		Iterator<JButton> alphaIterator = alphaButtonList.iterator();
 		while (alphaIterator.hasNext()) {
 		    ((JButton) alphaIterator.next()).setEnabled(disable);
 		}
@@ -663,6 +663,7 @@ public class Hangman {
 /**
  * Class GallowsArea
  */
+@SuppressWarnings("serial")
 class GallowsArea extends JPanel {
     Hangman controller;
 
