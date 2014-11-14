@@ -85,10 +85,10 @@ public class Hangman {
 	// Color the word area
 	wordArea.setBackground(Color.lightGray);
 
-	// Present the new word
+	// Present the new word    Server function
 	targetWord = WordSelector.getWord();
 
-	// Fill the word-to-guess with ---
+	// Fill the word-to-guess with ---    Client function
 	currentGuess = "-";
 	for (int i = 0; i < targetWord.length() - 1; i++) {
 	    currentGuess = currentGuess.concat("-");
@@ -112,8 +112,8 @@ public class Hangman {
      * @param answer
      *            Will be "a", "b", "c", etc.
      */
-    public void processAnswer(String answer) { // Have Vanna turn the correct
-					       // letters over
+    public void processAnswer(String answer) { // Have Vanna turn the correct	Server function
+					       // letters over	
 	char newCharacter = answer.charAt(0);
 
 	// Look thru the target word.
