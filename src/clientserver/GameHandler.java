@@ -2,18 +2,17 @@ package clientserver;
 
 import game.WordSelector;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GameHandler extends Thread {
 	private Socket clientSocket;
 	// String targetWord;
 	// Scanner kb = new Scanner(System.in);
-	char again = 'n';
+	String again;
 	String secret;
 	StringBuffer dashes;
 	final int MAXPARTS = 6;
@@ -21,18 +20,23 @@ public class GameHandler extends Thread {
 	int gamecounter = 0, gamewin = 0;
 	boolean done;
 	String guess;
-	String guesses;
+	private ArrayList<String> guesses;
 	char letter;
+	boolean incorrect;
 
 	/**
 	 * Creates a new instance.
-	 *
+	 * 
 	 * @param clientSocket
 	 *            This socket should be connected to a hangman client.
 	 */
 	GameHandler(Socket clientSocket) {
 		this.clientSocket = clientSocket;
-		// this.secret = WordSelector.getWord();
+		guesses = new ArrayList<String>();
+	}
+
+	public boolean findGuess(String a) {
+		return guesses.contains(a);
 	}
 
 	/**
@@ -55,39 +59,41 @@ public class GameHandler extends Thread {
 			gamecounter++;
 			secret = WordSelector.getWord();
 			out.println(secret);
-			guesses = "";
+			out.flush();
 			done = false;
 			bodyparts = MAXPARTS;
-			boolean incorrect = secret.indexOf(letter) < 0;
-
 			// make dashes
 			dashes = makeDashes(secret);
 			out.println(dashes);
+			out.flush();
 
 			while (!done) {
-				// System.out.println("Here is your word: " + dashes);
-				// System.out.println("Guesses so far: " + guesses);
-				// System.out.print("enter a letter: ");
-				
-				guess = in.nextLine();	//receive input from client
-				
+				out.println(guesses.toString());
+				out.flush();
+				guess = in.nextLine(); // receive input from client
 				// process the guess
-				letter = guess.charAt(0);
-				guesses += letter;
-				if (incorrect) // not there
-				{
-					--bodyparts;
-					// System.out.print("bad guess - ");
-					out.print(incorrect);
-					
-				} else // letter is in the secret
-				{
-					// put it in dashes where it belongs
+				if (guess.length() == 1) {
+					letter = guess.charAt(0);
 					matchLetter(secret, dashes, letter);
+				} else if (guess.equals(secret)) {
+					incorrect = false;
+					dashes = new StringBuffer(guess);
+				} else if (findGuess(guess)) {
+					incorrect = false;
+				} else {
+					incorrect = true;
+					guesses.add(guess);
 				}
-				//System.out.println(bodyparts + " bodyparts are left");
+
+				if (incorrect) {
+					bodyparts--;
+				}
+				// System.out.println(bodyparts + " bodyparts are left");
 				out.println(bodyparts);
-				
+				out.flush();
+				out.println(dashes);
+				out.flush();
+
 				if (bodyparts == 0) {
 					// System.out.println("you lose, the word is " + secret);
 					done = true;
@@ -101,12 +107,13 @@ public class GameHandler extends Thread {
 
 			// System.out.print("play again (y/n)?: ");
 			// again = in.toString().charAt(0);
-			again = in.next().charAt(0);
-		} while (again == 'Y' || again == 'y');
+			again = in.nextLine();
+		} while (again.equals("Y") || again.equals("y"));
 
-		// System.out.println("thanks for playing (no more words)");
-		// System.out.println("You have won " + gamewin + " of " + gamecounter
-		// + " games");
+		out.println(gamewin);
+		out.flush();
+		out.println(gamecounter);
+		out.flush();
 
 		try {
 			out.close();
@@ -118,12 +125,19 @@ public class GameHandler extends Thread {
 
 	}
 
-	public static void matchLetter(String secret, StringBuffer dashes,
-			char letter) {
-		for (int index = 0; index < secret.length(); index++)
-			if (secret.charAt(index) == letter)
-				dashes.setCharAt(index, letter);
-		System.out.print("good guess - ");
+	public void matchLetter(String secret, StringBuffer dashes, char letter) {
+		if (!findGuess(Character.toString(letter))) {
+			guesses.add(Character.toString(letter));
+			incorrect = true;
+			for (int index = 0; index < secret.length(); index++) {
+				if (secret.charAt(index) == letter) {
+					dashes.setCharAt(index, letter);
+					incorrect = false;
+				}
+			}
+		} else {
+			incorrect = false;
+		}
 	}
 
 	public static StringBuffer makeDashes(String s) {
