@@ -1,4 +1,4 @@
-package clientserver;
+package server;
 
 import game.WordSelector;
 
@@ -57,6 +57,7 @@ public class GameHandler extends Thread {
 		do {
 			// play a game
 			gamecounter++;
+			guesses.clear();
 			secret = WordSelector.getWord();
 			out.println(secret);
 			out.flush();
